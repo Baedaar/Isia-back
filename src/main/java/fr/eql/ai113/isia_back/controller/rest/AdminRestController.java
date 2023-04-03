@@ -1,15 +1,13 @@
 package fr.eql.ai113.isia_back.controller.rest;
 
 import fr.eql.ai113.isia_back.complexe.request.CreationCompteEmployeReq;
-import fr.eql.ai113.isia_back.entity.Adresse;
 import fr.eql.ai113.isia_back.entity.Document;
-import fr.eql.ai113.isia_back.entity.Employe;
-import fr.eql.ai113.isia_back.entity.LieuNaissance;
 import fr.eql.ai113.isia_back.entity.dto.AdresseDto;
 import fr.eql.ai113.isia_back.entity.dto.EmployeDto;
 import fr.eql.ai113.isia_back.entity.dto.LieuNaissanceDto;
 import fr.eql.ai113.isia_back.service.AdminService;
 import fr.eql.ai113.isia_back.service.impl.exception.DocumentException;
+import fr.eql.ai113.isia_back.service.impl.exception.PasswordGenerationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -47,8 +45,8 @@ public class AdminRestController {
 
     @PostMapping("/admin/saveEmployee")
     @CrossOrigin(origins = "http://localhost:3000")
-    public Employe createEmployee(
-            @RequestBody CreationCompteEmployeReq req) {
+    public List<String> createEmployee(
+            @RequestBody CreationCompteEmployeReq req) throws PasswordGenerationException {
 
         AdresseDto adresseDto = req.getAdresseDto();
         LieuNaissanceDto lieuNaissanceDto = req.getLieuNaissanceDto();

@@ -47,7 +47,11 @@
 			<artifactId>json</artifactId>
 			<version>20211205</version>
 		</dependency>
-
+			<dependency>
+				<groupId>org.passay</groupId>
+				<artifactId>passay</artifactId>
+				<version>1.6.3</version>
+			</dependency>
 	</dependencies>
 	<dependencyManagement>
 

@@ -5,7 +5,7 @@ public class AdresseDto {
     private Integer numeroRue;
     private String rue;
     private String ville;
-    private Long client_Id;
+    private Long employe_Id;
 
     //Getters
     public Integer getNumeroRue() {
@@ -18,6 +18,6 @@ public class AdresseDto {
         return ville;
     }
     public Long getClient_Id() {
-        return client_Id;
+        return employe_Id;
     }
 }

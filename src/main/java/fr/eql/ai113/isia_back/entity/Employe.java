@@ -35,14 +35,6 @@ public class Employe {
         this.adresse = adresse;
     }
 
-    public Employe(String nom, String prenom, LocalDate dateNaissance, LieuNaissance lieuNaissance, Adresse adresse) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.dateNaissance = dateNaissance;
-        this.lieuNaissance = lieuNaissance;
-        this.adresse = adresse;
-    }
-
     public Employe() {
         super();
     }
