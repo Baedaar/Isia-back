@@ -1,0 +1,2 @@
+INSERT INTO `employe` (`id`, `nom`, `password`, `prenom`, `username`) VALUES (1, 'Doe', '$2a$10$5JsdK2QYshgKFjI8fxXgw.2S.G1TyafPB7RhBHXlYuZhtvQ1lMUCS', 'John', 'toto');
+INSERT INTO `admin`(`id`, `password`, `username`) values (1, '$2a$12$PmjQkgOI5PocooVlgqu17OIcqs0pjQQthvtQ.8TUNlQM8UXwpaa6m','bedo');

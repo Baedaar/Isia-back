@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class EmployeDto {
 
-    private String login;
+    private String username;
     private String password;
     private String nom;
     private String prenom;
@@ -14,8 +14,8 @@ public class EmployeDto {
 
 
     // Getters
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
     public String getPassword() {
         return password;

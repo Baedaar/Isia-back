@@ -7,6 +7,7 @@ import fr.eql.ai113.isia_back.entity.dto.EmployeDto;
 import fr.eql.ai113.isia_back.entity.dto.LieuNaissanceDto;
 import fr.eql.ai113.isia_back.service.AdminService;
 import fr.eql.ai113.isia_back.service.impl.exception.DocumentException;
+import fr.eql.ai113.isia_back.service.impl.exception.EmployeNotFoundException;
 import fr.eql.ai113.isia_back.service.impl.exception.PasswordGenerationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.json.JSONObject;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@RequestMapping("admin")
 @CrossOrigin(origins = "http://localhost:3000")
 public class AdminRestController {
 
@@ -32,7 +35,7 @@ public class AdminRestController {
         return "doc";
     }
 
-    @PostMapping("/admin/uploadFile")
+    @PostMapping("/uploadFile")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> uploadMultipleFiles(@RequestParam("file") MultipartFile[] files, @RequestParam("docName") String docName, @RequestParam("docType") String docType) throws DocumentException {
         for (MultipartFile file : files) {
@@ -43,7 +46,7 @@ public class AdminRestController {
         return ResponseEntity.ok(responseJson.toString());
     }
 
-    @PostMapping("/admin/saveEmployee")
+    @PostMapping("/saveEmployee")
     @CrossOrigin(origins = "http://localhost:3000")
     public List<String> createEmployee(
             @RequestBody CreationCompteEmployeReq req) throws PasswordGenerationException {
@@ -54,6 +57,13 @@ public class AdminRestController {
 
         return adminService.creerCompteEmploye(employeDto, adresseDto,lieuNaissanceDto);
     }
+
+    @PostMapping("/deleteEmployee")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public LocalDate deleteEmployee(@RequestBody EmployeDto employeDto) throws EmployeNotFoundException {
+        return adminService.deleteEmploye(employeDto);
+    }
+
 
 
 

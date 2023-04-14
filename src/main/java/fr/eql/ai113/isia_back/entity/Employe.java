@@ -1,21 +1,26 @@
 package fr.eql.ai113.isia_back.entity;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 @Entity
-public class Employe {
+public class Employe implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String login;
+    private String username;
     private String password;
     private String nom;
     private String prenom;
     private LocalDate dateNaissance;
+    private LocalDate dateRetrait;
 
     @ManyToOne
     @JoinColumn(name = "lieu_naissance_id")
@@ -25,8 +30,11 @@ public class Employe {
     @JoinColumn(name = "adresse_id",referencedColumnName = "id")
     private Adresse adresse;
 
-    public Employe(String login, String password, String nom, String prenom, LocalDate dateNaissance, LieuNaissance lieuNaissance, Adresse adresse) {
-        this.login = login;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles;
+
+    public Employe(String username, String password, String nom, String prenom, LocalDate dateNaissance, LieuNaissance lieuNaissance, Adresse adresse) {
+        this.username = username;
         this.password = password;
         this.nom = nom;
         this.prenom = prenom;
@@ -39,13 +47,43 @@ public class Employe {
         super();
     }
 
+    public Employe(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+    @Override
+    public String getUsername() {
+        return username;
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
+
+
 
     // Getters
     public Long getId() {
         return id;
-    }
-    public String getLogin() {
-        return login;
     }
     public String getPassword() {
         return password;
@@ -65,13 +103,16 @@ public class Employe {
     public Adresse getAdresse() {
         return adresse;
     }
+    public LocalDate getDateRetrait() {
+        return dateRetrait;
+    }
 
     //Setters
     public void setId(Long id) {
         this.id = id;
     }
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String login) {
+        this.username = login;
     }
     public void setPassword(String password) {
         this.password = password;
@@ -90,5 +131,8 @@ public class Employe {
     }
     public void setAdresse(Adresse adresse) {
         this.adresse = adresse;
+    }
+    public void setDateRetrait(LocalDate dateRetrait) {
+        this.dateRetrait = dateRetrait;
     }
 }

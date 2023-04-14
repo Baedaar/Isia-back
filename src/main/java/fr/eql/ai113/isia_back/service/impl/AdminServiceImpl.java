@@ -29,10 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService, AdresseService, LieuNaissanceService, PasswordService {
@@ -137,7 +135,7 @@ public class AdminServiceImpl implements AdminService, AdresseService, LieuNaiss
                 adresse
         );
         employeDao.save(newEmploye);
-        loginPassword.add(newEmploye.getLogin());
+        loginPassword.add(newEmploye.getUsername());
         loginPassword.add(newEmploye.getPassword());
 
         return loginPassword;
@@ -166,14 +164,14 @@ public class AdminServiceImpl implements AdminService, AdresseService, LieuNaiss
 
     @Override
     public String displayNewLogin(Employe employe) throws EmployeNotFoundException {
-        String login;
+        String username;
         Optional<Employe> employeSearched = employeDao.findById(employe.getId());
         try {
             if (employeSearched.isPresent()) {
                 employe = employeSearched.get();
-                login = employe.getLogin();
+                username = employe.getUsername();
 
-                return login;
+                return username;
             }
         } catch (Exception e) {
             throw new EmployeNotFoundException("Cet employé n'existe pas", e);
@@ -196,5 +194,24 @@ public class AdminServiceImpl implements AdminService, AdresseService, LieuNaiss
             throw new EmployeNotFoundException("Cet employé n'existe pas", e);
         }
         return null;
+    }
+
+    @Override
+    public LocalDate deleteEmploye(EmployeDto employeDto) throws EmployeNotFoundException {
+
+        try {
+            Employe searchedEmployee = employeDao
+                    .findEmployeByNomAndPrenom(employeDto.getNom(), employeDto.getPrenom());
+            if (searchedEmployee.getDateRetrait() == null) {
+                searchedEmployee.setDateRetrait(LocalDate.now());
+                employeDao.save(searchedEmployee);
+                return searchedEmployee.getDateRetrait();
+
+            }else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new EmployeNotFoundException("Cet employé n'a pas été retrouvé", e);
+        }
     }
 }

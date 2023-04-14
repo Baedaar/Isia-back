@@ -4,4 +4,8 @@ public class EmployeNotFoundException extends Exception {
     public EmployeNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public EmployeNotFoundException(String message) {
+        super(message);
+    }
 }

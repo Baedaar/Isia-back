@@ -10,6 +10,7 @@ import fr.eql.ai113.isia_back.service.impl.exception.EmployeNotFoundException;
 import fr.eql.ai113.isia_back.service.impl.exception.PasswordGenerationException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public interface AdminService {
     List<Document> getFiles();
     String displayNewLogin(Employe employe) throws EmployeNotFoundException;
     String displayNewPassword(Employe employe) throws EmployeNotFoundException;
+    LocalDate deleteEmploye(EmployeDto employeDto) throws EmployeNotFoundException;
 
 }
 
