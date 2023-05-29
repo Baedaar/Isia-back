@@ -20,4 +20,18 @@ public class AdresseDto {
     public Long getClient_Id() {
         return employe_Id;
     }
+
+    //Setters
+    public void setNumeroRue(Integer numeroRue) {
+        this.numeroRue = numeroRue;
+    }
+    public void setRue(String rue) {
+        this.rue = rue;
+    }
+    public void setVille(String ville) {
+        this.ville = ville;
+    }
+    public void setEmploye_Id(Long employe_Id) {
+        this.employe_Id = employe_Id;
+    }
 }

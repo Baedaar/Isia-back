@@ -1,26 +1,29 @@
 package fr.eql.ai113.isia_back.entity;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
-public class Employe implements UserDetails {
+@PrimaryKeyJoinColumn(name = "user_id")
+public class Employe extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String password;
     private String nom;
     private String prenom;
     private LocalDate dateNaissance;
     private LocalDate dateRetrait;
+    @JsonIgnore
+    @OneToMany
+    private List<Document> employesDoc;
 
     @ManyToOne
     @JoinColumn(name = "lieu_naissance_id")
@@ -30,63 +33,26 @@ public class Employe implements UserDetails {
     @JoinColumn(name = "adresse_id",referencedColumnName = "id")
     private Adresse adresse;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles;
-
-    public Employe(String username, String password, String nom, String prenom, LocalDate dateNaissance, LieuNaissance lieuNaissance, Adresse adresse) {
-        this.username = username;
-        this.password = password;
+    public Employe(String username, String password, Collection<Role> roles, String nom, String prenom, LocalDate dateNaissance, LocalDate dateRetrait, LieuNaissance lieuNaissance, Adresse adresse, List<Document> documents) {
+        super(username, password, roles);
         this.nom = nom;
         this.prenom = prenom;
         this.dateNaissance = dateNaissance;
+        this.dateRetrait = dateRetrait;
         this.lieuNaissance = lieuNaissance;
         this.adresse = adresse;
+        this.employesDoc= documents;
     }
 
     public Employe() {
-        super();
-    }
 
-    public Employe(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
-    }
-    @Override
-    public String getUsername() {
-        return username;
-    }
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
 
 
-
-
-    // Getters
+    // getters
     public Long getId() {
         return id;
-    }
-    public String getPassword() {
-        return password;
     }
     public String getNom() {
         return nom;
@@ -97,26 +63,20 @@ public class Employe implements UserDetails {
     public LocalDate getDateNaissance() {
         return dateNaissance;
     }
+    public LocalDate getDateRetrait() {
+        return dateRetrait;
+    }
     public LieuNaissance getLieuNaissance() {
         return lieuNaissance;
     }
     public Adresse getAdresse() {
         return adresse;
     }
-    public LocalDate getDateRetrait() {
-        return dateRetrait;
+    public List<Document> getEmployesDoc() {
+        return employesDoc;
     }
 
-    //Setters
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public void setUsername(String login) {
-        this.username = login;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    // setters
     public void setNom(String nom) {
         this.nom = nom;
     }
@@ -126,13 +86,16 @@ public class Employe implements UserDetails {
     public void setDateNaissance(LocalDate dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
+    public void setDateRetrait(LocalDate dateRetrait) {
+        this.dateRetrait = dateRetrait;
+    }
     public void setLieuNaissance(LieuNaissance lieuNaissance) {
         this.lieuNaissance = lieuNaissance;
     }
     public void setAdresse(Adresse adresse) {
         this.adresse = adresse;
     }
-    public void setDateRetrait(LocalDate dateRetrait) {
-        this.dateRetrait = dateRetrait;
+    public void setEmployesDoc(List<Document> employesDoc) {
+        this.employesDoc = employesDoc;
     }
 }

@@ -1,39 +1,49 @@
 package fr.eql.ai113.isia_back.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import org.springframework.lang.Nullable;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name="document")
 public class Document {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String docName;
     private String docType;
 
+    @Nullable
+    @ManyToOne
+    private User visibleBy;
+
+    @ManyToOne
+    private User uploadedBy;
+
+
     @Lob
     private byte[] data;
 
+
+
+
     public Document() {}
 
-    public Document(String docName, String docType, byte[] data) {
+    public Document(String docName, String docType, byte[] data, User visibleBy, User uploadedBy) {
         super();
         this.docName = docName;
         this.docType = docType;
         this.data = data;
+        this.visibleBy = visibleBy;
+        this.uploadedBy = uploadedBy;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

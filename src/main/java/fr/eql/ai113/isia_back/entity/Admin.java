@@ -1,81 +1,37 @@
 package fr.eql.ai113.isia_back.entity;
 
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
-public class Admin implements UserDetails {
+@PrimaryKeyJoinColumn(name = "user_id")
+public class Admin  extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles;
+    @JsonIgnore
+    @OneToMany
+    private List<Document> documentsUploaded;
 
-
-    public Admin(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public Admin(String username, String password, Collection<Role> roles, List<Document> documents) {
+        super(username, password, roles);
+        this.documentsUploaded = documents;
     }
 
     public Admin() {
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+    public List<Document> getDocumentsUploaded() {
+        return documentsUploaded;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    // Getters
-    public Long getId() {
-        return id;
-    }
-
-
-    // Setters
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDocumentsUploaded(List<Document> documentsUploaded) {
+        this.documentsUploaded = documentsUploaded;
     }
 }

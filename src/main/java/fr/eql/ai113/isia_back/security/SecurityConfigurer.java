@@ -58,7 +58,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // Points publics
                 .antMatchers("/security/**").permitAll()
+
                 // Points privés
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/employe").hasRole("USER")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(securityFilter(), UsernamePasswordAuthenticationFilter.class);
