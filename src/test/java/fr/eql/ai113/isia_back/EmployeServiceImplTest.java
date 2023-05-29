@@ -11,9 +11,11 @@ import fr.eql.ai113.isia_back.repository.EmployeDao;
 import fr.eql.ai113.isia_back.service.impl.EmployeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -22,9 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-
+@ExtendWith(MockitoExtension.class)
 public class EmployeServiceImplTest {
 
     @InjectMocks
@@ -39,13 +43,15 @@ public class EmployeServiceImplTest {
     @Mock
     private DocumentDao documentDao;
 
-    @Mock
     private BCryptPasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void setup(){
+        passwordEncoder = new BCryptPasswordEncoder();
         MockitoAnnotations.openMocks(this);
     }
+
+
 
     @Test
     public void testVoirDocEmploye() {
@@ -68,22 +74,29 @@ public class EmployeServiceImplTest {
         Employe employe = new Employe();
         Adresse adresse = new Adresse();
 
+        String rawPassword = "a";
         employeDto.setNom("John");
         employeDto.setPrenom("Doe");
-        employeDto.setPassword(passwordEncoder.encode("a"));
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        employeDto.setPassword(encodedPassword);
 
         adresseDto.setNumeroRue(123);
         adresseDto.setRue("Baker Street");
         adresseDto.setVille("London");
 
         when(employeDao.findByUsername(username)).thenReturn(employe);
-        when(passwordEncoder.encode(employeDto.getPassword())).thenReturn("a");
+        when(adresseDao.save(any(Adresse.class))).thenReturn(adresse);
+        when(employeDao.save(any(Employe.class))).thenAnswer(invocation -> {
+            Employe passedEmploye = invocation.getArgument(0);
+            passedEmploye.setPassword(encodedPassword);
+            return passedEmploye;
+        });
 
         UserDetails result = employeService.update(username, employeDto, adresseDto);
 
         assertEquals("John", employe.getNom());
         assertEquals("Doe", employe.getPrenom());
-        assertEquals(passwordEncoder.encode("a"), employe.getPassword());
+        assertTrue(passwordEncoder.matches(rawPassword, employe.getPassword()));
     }
 
     @Test
